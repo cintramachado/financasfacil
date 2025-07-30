@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Financeira - Balanço e DRE</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c5282;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2d3748;
+            border-bottom: 2px solid #4299e1;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #4a5568;
+            margin-top: 25px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #4299e1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #4299e1;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .formula {
+            background-color: #e6fffa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            border-left: 4px solid #38b2ac;
+        }
+        .input-field {
+            background-color: #fff5f5;
+            border: 2px solid #fc8181;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: right;
+            width: 120px;
+        }
+        .calculated {
+            background-color: #f0fff4;
+            font-weight: bold;
+            color: #2f855a;
+        }
+        .note {
+            background-color: #fffaf0;
+            border: 1px solid #f6e05e;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            text-align: right;
+        }
+        .result {
+            padding: 10px;
+            background: #e6fffa;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Análise Financeira Automatizada</h1>
+        <div class="note">
+            <strong>💡 Como usar:</strong> Insira os valores do Balanço Patrimonial e DRE nos campos destacados. Os indicadores serão calculados automaticamente.
+        </div>
+
+        <div class="section">
+            <h2>📋 1. Dados de Entrada - Balanço Patrimonial</h2>
+            <div class="grid">
+                <div>
+                    <h3>ATIVO</h3>
+                    <table>
+                        <tr>
+                            <th>Conta</th>
+                            <th>Valor (R$)</th>
+                        </tr>
+                        <tr>
+                            <td>Caixa e Equivalentes</td>
+                            <td><input type="number" id="caixa" value="100000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td>Contas a Receber</td>
+                            <td><input type="number" id="contasReceber" value="250000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td>Estoques</td>
+                            <td><input type="number" id="estoques" value="180000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td>Ativo Circulante</td>
+                            <td class="calculated" id="ativoCirculante">530.000</td>
+                        </tr>
+                        <tr>
+                            <td>Imobilizado</td>
+                            <td><input type="number" id="imobilizado" value="800000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ativo Total</strong></td>
+                            <td class="calculated" id="ativoTotal"><strong>1.330.000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div>
+                    <h3>PASSIVO</h3>
+                    <table>
+                        <tr>
+                            <th>Conta</th>
+                            <th>Valor (R$)</th>
+                        </tr>
+                        <tr>
+                            <td>Fornecedores</td>
+                            <td><input type="number" id="fornecedores" value="120000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td>Empréstimos Curto Prazo</td>
+                            <td><input type="number" id="emprestimosCP" value="80000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td>Passivo Circulante</td>
+                            <td class="calculated" id="passivoCirculante">200.000</td>
+                        </tr>
+                        <tr>
+                            <td>Empréstimos Longo Prazo</td>
+                            <td><input type="number" id="emprestimosLP" value="400000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td>Patrimônio Líquido</td>
+                            <td><input type="number" id="patrimonioLiquido" value="730000" oninput="calcularIndicadores()"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Passivo Total</strong></td>
+                            <td class="calculated" id="passivoTotal"><strong>1.330.000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📈 2. Dados de Entrada - DRE</h2>
+            <table>
+                <tr>
+                    <th>Conta</th>
+                    <th>Valor (R$)</th>
+                </tr>
+                <tr>
+                    <td>Receita Bruta</td>
+                    <td><input type="number" id="receitaBruta" value="1500000" oninput="calcularIndicadores()"></td>
+                </tr>
+                <tr>
+                    <td>Custo dos Produtos Vendidos (CPV)</td>
+                    <td><input type="number" id="cpv" value="900000" oninput="calcularIndicadores()"></td>
+                </tr>
+                <tr>
+                    <td>Lucro Bruto</td>
+                    <td class="calculated" id="lucroBruto">600.000</td>
+                </tr>
+                <tr>
+                    <td>Despesas Operacionais</td>
+                    <td><input type="number" id="despesasOp" value="350000" oninput="calcularIndicadores()"></td>
+                </tr>
+                <tr>
+                    <td><strong>Lucro Líquido</strong></td>
+                    <td class="calculated" id="lucroLiquido"><strong>250.000</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>⏱️ 3. Prazos Médios (em dias)</h2>
+            <table>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Fórmula Excel</th>
+                    <th>Resultado</th>
+                </tr>
+                <tr>
+                    <td>Prazo Médio de Estocagem (PME)</td>
+                    <td class="formula">=(Estoques/CPV)*360</td>
+                    <td class="result" id="pme">72 dias</td>
+                </tr>
+                <tr>
+                    <td>Prazo Médio de Recebimento (PMR)</td>
+                    <td class="formula">=(Contas a Receber/Receita Bruta)*360</td>
+                    <td class="result" id="pmr">60 dias</td>
+                </tr>
+                <tr>
+                    <td>Prazo Médio de Pagamento (PMP)</td>
+                    <td class="formula">=(Fornecedores/CPV)*360</td>
+                    <td class="result" id="pmp">48 dias</td>
+                </tr>
+                <tr>
+                    <td><strong>Ciclo Operacional</strong></td>
+                    <td class="formula">=PME+PMR</td>
+                    <td class="result" id="cicloOp"><strong>132 dias</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Ciclo Financeiro</strong></td>
+                    <td class="formula">=PME+PMR-PMP</td>
+                    <td class="result" id="cicloFin"><strong>84 dias</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🔄 4. Indicadores de Giro</h2>
+            <table>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Fórmula Excel</th>
+                    <th>Resultado</th>
+                </tr>
+                <tr>
+                    <td>Giro do Estoque</td>
+                    <td class="formula">=CPV/Estoques</td>
+                    <td class="result" id="giroEstoque">5,0x</td>
+                </tr>
+                <tr>
+                    <td>Giro do Ativo</td>
+                    <td class="formula">=Receita Bruta/Ativo Total</td>
+                    <td class="result" id="giroAtivo">1,1x</td>
+                </tr>
+                <tr>
+                    <td>Giro do Patrimônio Líquido</td>
+                    <td class="formula">=Receita Bruta/Patrimônio Líquido</td>
+                    <td class="result" id="giroPL">2,1x</td>
+                </tr>
+                <tr>
+                    <td>Giro de Contas a Receber</td>
+                    <td class="formula">=Receita Bruta/Contas a Receber</td>
+                    <td class="result" id="giroContasReceber">6,0x</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>💰 5. Indicadores de Rentabilidade (%)</h2>
+            <table>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Fórmula Excel</th>
+                    <th>Resultado</th>
+                </tr>
+                <tr>
+                    <td>Margem Bruta</td>
+                    <td class="formula">=(Lucro Bruto/Receita Bruta)*100</td>
+                    <td class="result" id="margemBruta">40,0%</td>
+                </tr>
+                <tr>
+                    <td>Margem Líquida</td>
+                    <td class="formula">=(Lucro Líquido/Receita Bruta)*100</td>
+                    <td class="result" id="margemLiquida">16,7%</td>
+                </tr>
+                <tr>
+                    <td>ROA (Retorno sobre Ativo)</td>
+                    <td class="formula">=(Lucro Líquido/Ativo Total)*100</td>
+                    <td class="result" id="roa">18,8%</td>
+                </tr>
+                <tr>
+                    <td>ROE (Retorno sobre PL)</td>
+                    <td class="formula">=(Lucro Líquido/Patrimônio Líquido)*100</td>
+                    <td class="result" id="roe">34,2%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🏦 6. Indicadores de Endividamento</h2>
+            <table>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Fórmula Excel</th>
+                    <th>Resultado</th>
+                </tr>
+                <tr>
+                    <td>Endividamento Total</td>
+                    <td class="formula">=((Passivo Circulante+Empréstimos LP)/Ativo Total)*100</td>
+                    <td class="result" id="endividamentoTotal">45,1%</td>
+                </tr>
+                <tr>
+                    <td>Endividamento de Curto Prazo</td>
+                    <td class="formula">=(Passivo Circulante/Ativo Total)*100</td>
+                    <td class="result" id="endividamentoCP">15,0%</td>
+                </tr>
+                <tr>
+                    <td>Composição do Endividamento</td>
+                    <td class="formula">=(Passivo Circulante/(Passivo Circulante+Empréstimos LP))*100</td>
+                    <td class="result" id="composicaoEnd">33,3%</td>
+                </tr>
+                <tr>
+                    <td>Participação de Capital de Terceiros</td>
+                    <td class="formula">=((Passivo Circulante+Empréstimos LP)/Patrimônio Líquido)*100</td>
+                    <td class="result" id="participacaoTerceiros">82,2%</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>🔍 7. Indicadores de Liquidez</h2>
+            <table>
+                <tr>
+                    <th>Indicador</th>
+                    <th>Fórmula Excel</th>
+                    <th>Resultado</th>
+                </tr>
+                <tr>
+                    <td>Liquidez Corrente</td>
+                    <td class="formula">=Ativo Circulante/Passivo Circulante</td>
+                    <td class="result" id="liquidezCorrente">2,65</td>
+                </tr>
+                <tr>
+                    <td>Liquidez Seca</td>
+                    <td class="formula">=(Ativo Circulante-Estoques)/Passivo Circulante</td>
+                    <td class="result" id="liquidezSeca">1,75</td>
+                </tr>
+                <tr>
+                    <td>Liquidez Imediata</td>
+                    <td class="formula">=Caixa/Passivo Circulante</td>
+                    <td class="result" id="liquidezImediata">0,50</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="note">
+            <strong>📌 Observações:</strong> Os valores são exemplos e podem ser ajustados conforme necessário. Os indicadores são calculados automaticamente com base nos dados inseridos.
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            return num.toLocaleString('pt-BR', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 1
+            });
+        }
+
+        function calcularIndicadores() {
+            // Buscar valores de entrada
+            const caixa = parseFloat(document.getElementById('caixa').value) || 0;
+            const contasReceber = parseFloat(document.getElementById('contasReceber').value) || 0;
+            const estoques = parseFloat(document.getElementById('estoques').value) || 0;
+            const imobilizado = parseFloat(document.getElementById('imobilizado').value) || 0;
+            const fornecedores = parseFloat(document.getElementById('fornecedores').value) || 0;
+            const emprestimosCP = parseFloat(document.getElementById('emprestimosCP').value) || 0;
+            const emprestimosLP = parseFloat(document.getElementById('emprestimosLP').value) || 0;
+            const patrimonioLiquido = parseFloat(document.getElementById('patrimonioLiquido').value) || 0;
+            const receitaBruta = parseFloat(document.getElementById('receitaBruta').value) || 0;
+            const cpv = parseFloat(document.getElementById('cpv').value) || 0;
+            const despesasOp = parseFloat(document.getElementById('despesasOp').value) || 0;
+
+            // Cálculos básicos
+            const ativoCirculante = caixa + contasReceber + estoques;
+            const ativoTotal = ativoCirculante + imobilizado;
+            const passivoCirculante = fornecedores + emprestimosCP;
+            const passivoTotal = passivoCirculante + emprestimosLP + patrimonioLiquido;
+            const lucroBruto = receitaBruta - cpv;
+            const lucroLiquido = lucroBruto - despesasOp;
+
+            // Atualizar totais
+            document.getElementById('ativoCirculante').textContent = formatNumber(ativoCirculante);
+            document.getElementById('ativoTotal').innerHTML = `<strong>${formatNumber(ativoTotal)}</strong>`;
+            document.getElementById('passivoCirculante').textContent = formatNumber(passivoCirculante);
+            document.getElementById('passivoTotal').innerHTML = `<strong>${formatNumber(passivoTotal)}</strong>`;
+            document.getElementById('lucroBruto').textContent = formatNumber(lucroBruto);
+            document.getElementById('lucroLiquido').innerHTML = `<strong>${formatNumber(lucroLiquido)}</strong>`;
+
+            // Prazos médios
+            const pme = cpv > 0 ? (estoques / cpv) * 360 : 0;
+            const pmr = receitaBruta > 0 ? (contasReceber / receitaBruta) * 360 : 0;
+            const pmp = cpv > 0 ? (fornecedores / cpv) * 360 : 0;
+            const cicloOp = pme + pmr;
+            const cicloFin = pme + pmr - pmp;
+
+            document.getElementById('pme').textContent = `${Math.round(pme)} dias`;
+            document.getElementById('pmr').textContent = `${Math.round(pmr)} dias`;
+            document.getElementById('pmp').textContent = `${Math.round(pmp)} dias`;
+            document.getElementById('cicloOp').innerHTML = `<strong>${Math.round(cicloOp)} dias</strong>`;
+            document.getElementById('cicloFin').innerHTML = `<strong>${Math.round(cicloFin)} dias</strong>`;
+
+            // Giros
+            const giroEstoque = estoques > 0 ? cpv / estoques : 0;
+            const giroAtivo = ativoTotal > 0 ? receitaBruta / ativoTotal : 0;
+            const giroPL = patrimonioLiquido > 0 ? receitaBruta / patrimonioLiquido : 0;
+            const giroContasReceber = contasReceber > 0 ? receitaBruta / contasReceber : 0;
+
+            document.getElementById('giroEstoque').textContent = `${giroEstoque.toFixed(1)}x`;
+            document.getElementById('giroAtivo').textContent = `${giroAtivo.toFixed(1)}x`;
+            document.getElementById('giroPL').textContent = `${giroPL.toFixed(1)}x`;
+            document.getElementById('giroContasReceber').textContent = `${giroContasReceber.toFixed(1)}x`;
+
+            // Rentabilidade
+            const margemBruta = receitaBruta > 0 ? (lucroBruto / receitaBruta) * 100 : 0;
+            const margemLiquida = receitaBruta > 0 ? (lucroLiquido / receitaBruta) * 100 : 0;
+            const roa = ativoTotal > 0 ? (lucroLiquido / ativoTotal) * 100 : 0;
+            const roe = patrimonioLiquido > 0 ? (lucroLiquido / patrimonioLiquido) * 100 : 0;
+
+            document.getElementById('margemBruta').textContent = `${margemBruta.toFixed(1)}%`;
+            document.getElementById('margemLiquida').textContent = `${margemLiquida.toFixed(1)}%`;
+            document.getElementById('roa').textContent = `${roa.toFixed(1)}%`;
+            document.getElementById('roe').textContent = `${roe.toFixed(1)}%`;
+
+            // Endividamento
+            const endividamentoTotal = ativoTotal > 0 ? ((passivoCirculante + emprestimosLP) / ativoTotal) * 100 : 0;
+            const endividamentoCP = ativoTotal > 0 ? (passivoCirculante / ativoTotal) * 100 : 0;
+            const composicaoEnd = (passivoCirculante + emprestimosLP) > 0 ? (passivoCirculante / (passivoCirculante + emprestimosLP)) * 100 : 0;
+            const participacaoTerceiros = patrimonioLiquido > 0 ? ((passivoCirculante + emprestimosLP) / patrimonioLiquido) * 100 : 0;
+
+            document.getElementById('endividamentoTotal').textContent = `${endividamentoTotal.toFixed(1)}%`;
+            document.getElementById('endividamentoCP').textContent = `${endividamentoCP.toFixed(1)}%`;
+            document.getElementById('composicaoEnd').textContent = `${composicaoEnd.toFixed(1)}%`;
+            document.getElementById('participacaoTerceiros').textContent = `${participacaoTerceiros.toFixed(1)}%`;
+
+            // Liquidez
+            const liquidezCorrente = passivoCirculante > 0 ? ativoCirculante / passivoCirculante : 0;
+            const liquidezSeca = passivoCirculante > 0 ? (ativoCirculante - estoques) / passivoCirculante : 0;
+            const liquidezImediata = passivoCirculante > 0 ? caixa / passivoCirculante : 0;
+
+            document.getElementById('liquidezCorrente').textContent = liquidezCorrente.toFixed(2);
+            document.getElementById('liquidezSeca').textContent = liquidezSeca.toFixed(2);
+            document.getElementById('liquidezImediata').textContent = liquidezImediata.toFixed(2);
+        }
+
+        // Calcular indicadores na inicialização
+        calcularIndicadores();
+    </script>
+</body>
+</html>
