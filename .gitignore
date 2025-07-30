@@ -12,6 +12,12 @@
 .swiftpm/
 migrate_working_dir/
 
+# Java/Android heap dumps and profiling
+*.hprof
+*.trace
+hs_err_pid*
+java_pid*.hprof
+
 # IntelliJ related
 *.iml
 *.ipr
